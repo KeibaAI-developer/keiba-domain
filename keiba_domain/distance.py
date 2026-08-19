@@ -6,6 +6,8 @@
 
 from enum import StrEnum
 
+from keiba_domain.exceptions import KeibaDomainError
+
 
 class DistanceClass(StrEnum):
     """学習用の距離区分を表すEnum.
@@ -73,7 +75,11 @@ def judge_distance_class(distance: int) -> DistanceClass:
     Returns:
         DistanceClass: 距離区分（短距離 ≤1400 / マイル <1800 / 中距離 ≤2200 /
             中長距離 ≤2600 / 長距離）
+
+    Raises:
+        KeibaDomainError: 距離が0以下の場合
     """
+    _validate_distance(distance)
     if distance <= 1400:
         return DistanceClass.SHORT
     if distance < 1800:
@@ -94,8 +100,25 @@ def judge_chakudosu_kyori_kubun(distance: int) -> ChakudosuKyoriKubun:
     Returns:
         ChakudosuKyoriKubun: 距離区分。境界値以下の区分を採用し、
             2800mを超える場合は"2801以上"とする
+
+    Raises:
+        KeibaDomainError: 距離が0以下の場合
     """
+    _validate_distance(distance)
     for boundary, kubun in _KYORI_KUBUN_BOUNDARIES:
         if distance <= boundary:
             return kubun
     return ChakudosuKyoriKubun.OVER_2801
+
+
+def _validate_distance(distance: int) -> None:
+    """距離が正であることを検証する.
+
+    Args:
+        distance (int): 距離（メートル）
+
+    Raises:
+        KeibaDomainError: 距離が0以下の場合
+    """
+    if distance <= 0:
+        raise KeibaDomainError(f"距離が不正です: {distance}")

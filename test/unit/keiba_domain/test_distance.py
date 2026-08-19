@@ -5,6 +5,7 @@ import pytest
 from keiba_domain import (
     ChakudosuKyoriKubun,
     DistanceClass,
+    KeibaDomainError,
     judge_chakudosu_kyori_kubun,
     judge_distance_class,
 )
@@ -77,3 +78,18 @@ def test_judge_chakudosu_kyori_kubun_returns_expected_kubun(
 ) -> None:
     """距離からJV-VAN出走別着度数の距離区分を正しく判定できる."""
     assert judge_chakudosu_kyori_kubun(distance) == expected
+
+
+# 準正常系
+@pytest.mark.parametrize("distance", [0, -1, -1400])
+def test_judge_distance_class_raises_for_non_positive_distance(distance: int) -> None:
+    """距離が0以下の場合はKeibaDomainErrorが発生する."""
+    with pytest.raises(KeibaDomainError, match="距離が不正です"):
+        judge_distance_class(distance)
+
+
+@pytest.mark.parametrize("distance", [0, -1, -1200])
+def test_judge_chakudosu_kyori_kubun_raises_for_non_positive_distance(distance: int) -> None:
+    """距離が0以下の場合はKeibaDomainErrorが発生する."""
+    with pytest.raises(KeibaDomainError, match="距離が不正です"):
+        judge_chakudosu_kyori_kubun(distance)
