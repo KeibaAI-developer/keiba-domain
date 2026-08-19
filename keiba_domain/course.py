@@ -11,17 +11,30 @@ from keiba_domain.keibajo import Keibajo
 
 
 class TurfDirt(StrEnum):
-    """芝・ダート・障害の区別を表すEnum.
+    """芝・ダートの区別を表すEnum.
+
+    平地か障害かはRaceShubetsuが表す別概念であり、障害レースにも芝ダは存在する
+    （JRA-VANのトラックコードでは障害コースの芝ダは「芝」）。
 
     Attributes:
         TURF: 芝
         DIRT: ダート
-        STEEPLECHASE: 障害
     """
 
     TURF = "芝"
     DIRT = "ダ"
-    STEEPLECHASE = "障"
+
+
+class RaceShubetsu(StrEnum):
+    """レース種別（平地・障害）を表すEnum.
+
+    Attributes:
+        HEICHI: 平地
+        SHOGAI: 障害
+    """
+
+    HEICHI = "平地"
+    SHOGAI = "障害"
 
 
 class Inout(StrEnum):
@@ -209,7 +222,8 @@ COURSE_TRACK_SIZE: dict[str, TrackSize] = {
 def parse_turf_dirt(text: str) -> TurfDirt | None:
     """芝ダを含む文字列から芝ダを判定する.
 
-    "障"を含む場合を最優先とし、次に"芝"、"ダ"の順に判定する。
+    平地か障害かは判定しない（芝ダとは別概念のため）。netkeibaの「障2880m」のように
+    芝ダの記載がない文字列はNoneになる。
 
     Args:
         text (str): 芝ダを含む文字列（例: "芝2000m(左 A)"）
@@ -217,8 +231,6 @@ def parse_turf_dirt(text: str) -> TurfDirt | None:
     Returns:
         TurfDirt | None: 芝ダ。判定できない場合はNone
     """
-    if "障" in text:
-        return TurfDirt.STEEPLECHASE
     if "芝" in text:
         return TurfDirt.TURF
     if "ダ" in text:

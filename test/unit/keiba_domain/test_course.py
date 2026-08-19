@@ -9,6 +9,7 @@ from keiba_domain import (
     Inout,
     KeibaDomainError,
     Keibajo,
+    RaceShubetsu,
     TrackSize,
     TurfDirt,
     build_course_key,
@@ -102,12 +103,13 @@ def test_get_track_size_returns_expected_size(course_key: str, expected: TrackSi
 @pytest.mark.parametrize(
     "text, expected",
     [
-        # "障"が優先される
-        ("障芝3000", TurfDirt.STEEPLECHASE),
+        # 障害表記でも芝ダの記載があればそちらを判定する（平地障害は別概念）
+        ("障芝3000", TurfDirt.TURF),
         ("芝2000m(左 A)", TurfDirt.TURF),
         ("ダ1800m(右 A)", TurfDirt.DIRT),
-        # 判定できない場合はNone
+        # 判定できない場合はNone（netkeibaの障害表記は芝ダの記載がない）
         ("2000m(左 A)", None),
+        ("障2880m", None),
     ],
 )
 def test_parse_turf_dirt_returns_expected_turf_dirt(text: str, expected: TurfDirt | None) -> None:
@@ -178,3 +180,9 @@ def test_is_straight_course_raises_for_non_positive_distance(distance: int) -> N
     """距離が0以下の場合はKeibaDomainErrorが発生する."""
     with pytest.raises(KeibaDomainError, match="距離が不正です"):
         is_straight_course(Keibajo.NIIGATA, TurfDirt.TURF, distance)
+
+
+def test_race_shubetsu_values() -> None:
+    """RaceShubetsuがレース種別カラムの値と一致する."""
+    assert RaceShubetsu.HEICHI == "平地"
+    assert RaceShubetsu.SHOGAI == "障害"
