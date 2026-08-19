@@ -5,7 +5,7 @@
 
 from enum import StrEnum
 
-from keiba_domain.exceptions import KeibaDomainError
+from keiba_domain._validation import validate_distance
 from keiba_domain.keibajo import Keibajo
 
 
@@ -263,7 +263,7 @@ def judge_direction(keibajo: Keibajo, turf_dirt: TurfDirt, distance: int) -> Dir
     Raises:
         KeibaDomainError: 距離が0以下の場合
     """
-    _validate_distance(distance)
+    validate_distance(distance)
     if keibajo == Keibajo.NIIGATA and turf_dirt == TurfDirt.TURF and distance == 1000:
         return Direction.STRAIGHT
     if keibajo in MIGI_KEIBAJO:
@@ -308,7 +308,7 @@ def get_course_key_inout(
     Raises:
         KeibaDomainError: 距離が0以下の場合
     """
-    _validate_distance(distance)
+    validate_distance(distance)
     base_course = f"{keibajo}{turf_dirt}{distance}"
     if base_course not in INOUT_REQUIRED_COURSES:
         return ""
@@ -350,16 +350,3 @@ def get_track_size(course_key: str) -> TrackSize | None:
         TrackSize | None: コースの大小。直線コースや未定義コースはNone
     """
     return COURSE_TRACK_SIZE.get(course_key)
-
-
-def _validate_distance(distance: int) -> None:
-    """距離が正であることを検証する.
-
-    Args:
-        distance (int): 距離（メートル）
-
-    Raises:
-        KeibaDomainError: 距離が0以下の場合
-    """
-    if distance <= 0:
-        raise KeibaDomainError(f"距離が不正です: {distance}")

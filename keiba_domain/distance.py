@@ -6,7 +6,7 @@
 
 from enum import StrEnum
 
-from keiba_domain.exceptions import KeibaDomainError
+from keiba_domain._validation import validate_distance
 
 
 class DistanceClass(StrEnum):
@@ -79,7 +79,7 @@ def judge_distance_class(distance: int) -> DistanceClass:
     Raises:
         KeibaDomainError: 距離が0以下の場合
     """
-    _validate_distance(distance)
+    validate_distance(distance)
     if distance <= 1400:
         return DistanceClass.SHORT
     if distance < 1800:
@@ -104,21 +104,8 @@ def judge_chakudosu_kyori_kubun(distance: int) -> ChakudosuKyoriKubun:
     Raises:
         KeibaDomainError: 距離が0以下の場合
     """
-    _validate_distance(distance)
+    validate_distance(distance)
     for boundary, kubun in _KYORI_KUBUN_BOUNDARIES:
         if distance <= boundary:
             return kubun
     return ChakudosuKyoriKubun.FROM_2801
-
-
-def _validate_distance(distance: int) -> None:
-    """距離が正であることを検証する.
-
-    Args:
-        distance (int): 距離（メートル）
-
-    Raises:
-        KeibaDomainError: 距離が0以下の場合
-    """
-    if distance <= 0:
-        raise KeibaDomainError(f"距離が不正です: {distance}")
