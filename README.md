@@ -74,9 +74,10 @@ from keiba_domain import (
     parse_turf_dirt,
 )
 
-# 芝ダ・内外の判定（"障"が優先される）
-turf_dirt = parse_turf_dirt("障芝3000")
-assert turf_dirt == TurfDirt.STEEPLECHASE
+# 芝ダ・内外の判定（平地か障害かはRaceShubetsuが表す別概念）
+turf_dirt = parse_turf_dirt("芝2000m(左 A)")
+assert turf_dirt == TurfDirt.TURF
+assert parse_turf_dirt("障2880m") is None  # 芝ダの記載がない文字列はNone
 inout = parse_inout("右 外 B")
 assert inout == Inout.SOTO
 
