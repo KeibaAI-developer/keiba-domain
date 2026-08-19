@@ -26,7 +26,7 @@ pip install -e /path/to/keiba-domain
 
 ## 使い方
 
-現時点では基底例外クラス `KeibaDomainError` のみを提供しています。
+基底例外クラス `KeibaDomainError`、競馬場・馬場状態・距離区分・枠のドメイン定義と判定関数を提供しています。
 
 ```python
 from keiba_domain import KeibaDomainError
@@ -37,7 +37,29 @@ except KeibaDomainError as e:
     print(f"keiba-domain由来のエラーです: {e}")
 ```
 
-今後、競馬場・馬場状態・芝ダ・内外・回り・距離区分・コースの大小・枠といったドメイン定義や判定関数がモジュールとして追加されていきます。
+```python
+from keiba_domain import (
+    WAKU_TO_WAKU_CLASS,
+    ChakudosuKyoriKubun,
+    DistanceClass,
+    Waku,
+    judge_chakudosu_kyori_kubun,
+    judge_distance_class,
+)
+
+# 学習用の距離区分（境界: 短距離≤1400 / マイル<1800 / 中距離≤2200 / 中長距離≤2600 / 長距離）
+distance_class = judge_distance_class(2000)
+assert distance_class == DistanceClass.MIDDLE
+
+# JV-VAN出走別着度数の距離区分（学習用のDistanceClassとは境界が異なる別概念）
+kyori_kubun = judge_chakudosu_kyori_kubun(2000)
+assert kyori_kubun == ChakudosuKyoriKubun.FROM_1801_TO_2000
+
+# 枠区分（内枠/中枠/外枠）
+waku_class = WAKU_TO_WAKU_CLASS[Waku.WAKU1]
+```
+
+今後、芝ダ・内外・回り・コースの大小といったドメイン定義や判定関数がモジュールとして追加されていきます。
 
 
 ## エラーハンドリング
