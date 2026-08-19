@@ -11,6 +11,12 @@ except (PackageNotFoundError, ImportError):
     __version__ = "unknown"
 
 from keiba_domain.baba import BABA_CODE_TO_NAME, Baba, baba_from_code
+from keiba_domain.distance import (
+    ChakudosuKyoriKubun,
+    DistanceClass,
+    judge_chakudosu_kyori_kubun,
+    judge_distance_class,
+)
 from keiba_domain.exceptions import KeibaDomainError
 from keiba_domain.keibajo import (
     CENTRAL_KEIBAJO_CODES,
@@ -20,16 +26,30 @@ from keiba_domain.keibajo import (
     is_central_keibajo,
     keibajo_from_code,
 )
+from keiba_domain.waku import (
+    WAKU_NUM_TO_WAKU,
+    WAKU_TO_WAKU_CLASS,
+    Waku,
+    WakuClass,
+)
 
 __all__ = [
     "BABA_CODE_TO_NAME",
     "CENTRAL_KEIBAJO_CODES",
     "KEIBAJO_CODE_TO_LOCAL_NAME",
     "KEIBAJO_CODE_TO_NAME",
+    "WAKU_NUM_TO_WAKU",
+    "WAKU_TO_WAKU_CLASS",
     "Baba",
+    "ChakudosuKyoriKubun",
+    "DistanceClass",
     "KeibaDomainError",
     "Keibajo",
+    "Waku",
+    "WakuClass",
     "baba_from_code",
     "is_central_keibajo",
+    "judge_chakudosu_kyori_kubun",
+    "judge_distance_class",
     "keibajo_from_code",
 ]
