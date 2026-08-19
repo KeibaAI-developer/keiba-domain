@@ -59,7 +59,41 @@ assert kyori_kubun == ChakudosuKyoriKubun.FROM_1801_TO_2000
 waku_class = WAKU_TO_WAKU_CLASS[Waku.WAKU1]
 ```
 
-今後、芝ダ・内外・回り・コースの大小といったドメイン定義や判定関数がモジュールとして追加されていきます。
+```python
+from keiba_domain import (
+    Direction,
+    Inout,
+    Keibajo,
+    TrackSize,
+    TurfDirt,
+    build_course_key,
+    get_track_size,
+    is_straight_course,
+    judge_direction,
+    parse_inout,
+    parse_turf_dirt,
+)
+
+# 芝ダ・内外の判定（平地か障害かはRaceShubetsuが表す別概念）
+turf_dirt = parse_turf_dirt("芝2000m(左 A)")
+assert turf_dirt == TurfDirt.TURF
+assert parse_turf_dirt("障2880m") is None  # 芝ダの記載がない文字列はNone
+inout = parse_inout("右 外 B")
+assert inout == Inout.SOTO
+
+# 回りの判定（新潟芝1000mのみ直線コースの例外）
+direction = judge_direction(Keibajo.NIIGATA, TurfDirt.TURF, 1000)
+assert direction == Direction.STRAIGHT
+assert is_straight_course(Keibajo.NIIGATA, TurfDirt.TURF, 1000)
+
+# コースキーの構築（内外区別が必要なコースのみサフィックスが付く。内外マークなしは内扱い）
+course_key = build_course_key(Keibajo.KYOTO, TurfDirt.TURF, 1600, Inout.SOTO)
+assert course_key == "京都芝1600外"
+
+# コースの大小の取得（直線・未定義コースはNone）
+track_size = get_track_size("東京芝2000")
+assert track_size == TrackSize.BIG
+```
 
 
 ## エラーハンドリング
