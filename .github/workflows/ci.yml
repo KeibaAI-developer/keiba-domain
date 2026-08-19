@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  ci:
+    uses: KeibaAI-developer/library-workflow/.github/workflows/ci.yml@main
+    with:
+      package_name: 'keiba_domain'
+      repo_name: 'keiba-domain'
