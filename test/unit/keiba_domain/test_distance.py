@@ -46,8 +46,8 @@ def test_judge_distance_class_returns_expected_class(
     "distance, expected",
     [
         # 1200以下の境界
-        (1199, ChakudosuKyoriKubun.UNDER_1200),
-        (1200, ChakudosuKyoriKubun.UNDER_1200),
+        (1199, ChakudosuKyoriKubun.TO_1200),
+        (1200, ChakudosuKyoriKubun.TO_1200),
         (1201, ChakudosuKyoriKubun.FROM_1201_TO_1400),
         # 1201-1400の境界
         (1400, ChakudosuKyoriKubun.FROM_1201_TO_1400),
@@ -69,8 +69,8 @@ def test_judge_distance_class_returns_expected_class(
         (2401, ChakudosuKyoriKubun.FROM_2401_TO_2800),
         # 2401-2800と2801以上の境界
         (2800, ChakudosuKyoriKubun.FROM_2401_TO_2800),
-        (2801, ChakudosuKyoriKubun.OVER_2801),
-        (3600, ChakudosuKyoriKubun.OVER_2801),
+        (2801, ChakudosuKyoriKubun.FROM_2801),
+        (3600, ChakudosuKyoriKubun.FROM_2801),
     ],
 )
 def test_judge_chakudosu_kyori_kubun_returns_expected_kubun(

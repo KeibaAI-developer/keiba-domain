@@ -31,7 +31,7 @@ class ChakudosuKyoriKubun(StrEnum):
     """JV-VAN出走別着度数の距離区分を表すEnum.
 
     Attributes:
-        UNDER_1200: 1200m以下
+        TO_1200: 1200m以下
         FROM_1201_TO_1400: 1201m〜1400m
         FROM_1401_TO_1600: 1401m〜1600m
         FROM_1601_TO_1800: 1601m〜1800m
@@ -39,10 +39,10 @@ class ChakudosuKyoriKubun(StrEnum):
         FROM_2001_TO_2200: 2001m〜2200m
         FROM_2201_TO_2400: 2201m〜2400m
         FROM_2401_TO_2800: 2401m〜2800m
-        OVER_2801: 2801m以上
+        FROM_2801: 2801m以上
     """
 
-    UNDER_1200 = "1200以下"
+    TO_1200 = "1200以下"
     FROM_1201_TO_1400 = "1201-1400"
     FROM_1401_TO_1600 = "1401-1600"
     FROM_1601_TO_1800 = "1601-1800"
@@ -50,12 +50,12 @@ class ChakudosuKyoriKubun(StrEnum):
     FROM_2001_TO_2200 = "2001-2200"
     FROM_2201_TO_2400 = "2201-2400"
     FROM_2401_TO_2800 = "2401-2800"
-    OVER_2801 = "2801以上"
+    FROM_2801 = "2801以上"
 
 
-# 距離の昇順に並んだ (上限距離, 区分) のペア。すべての上限を超えた場合はOVER_2801とする
+# 距離の昇順に並んだ (上限距離, 区分) のペア。すべての上限を超えた場合はFROM_2801とする
 _KYORI_KUBUN_BOUNDARIES: list[tuple[int, ChakudosuKyoriKubun]] = [
-    (1200, ChakudosuKyoriKubun.UNDER_1200),
+    (1200, ChakudosuKyoriKubun.TO_1200),
     (1400, ChakudosuKyoriKubun.FROM_1201_TO_1400),
     (1600, ChakudosuKyoriKubun.FROM_1401_TO_1600),
     (1800, ChakudosuKyoriKubun.FROM_1601_TO_1800),
@@ -108,7 +108,7 @@ def judge_chakudosu_kyori_kubun(distance: int) -> ChakudosuKyoriKubun:
     for boundary, kubun in _KYORI_KUBUN_BOUNDARIES:
         if distance <= boundary:
             return kubun
-    return ChakudosuKyoriKubun.OVER_2801
+    return ChakudosuKyoriKubun.FROM_2801
 
 
 def _validate_distance(distance: int) -> None:
