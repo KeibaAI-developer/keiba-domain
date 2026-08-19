@@ -1,7 +1,5 @@
 # example/
 
-このディレクトリにライブラリの使用例スクリプトを配置してください。
-
 ## example_keiba_domain.py
 
 `keiba_domain` の主要な公開APIを一通り呼び出すサンプルスクリプトです。競馬場・馬場状態・
