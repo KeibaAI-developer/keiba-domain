@@ -51,6 +51,19 @@ class ChakudosuKyoriKubun(StrEnum):
     OVER_2801 = "2801以上"
 
 
+# 距離の昇順に並んだ (上限距離, 区分) のペア。すべての上限を超えた場合はOVER_2801とする
+_KYORI_KUBUN_BOUNDARIES: list[tuple[int, ChakudosuKyoriKubun]] = [
+    (1200, ChakudosuKyoriKubun.UNDER_1200),
+    (1400, ChakudosuKyoriKubun.FROM_1201_TO_1400),
+    (1600, ChakudosuKyoriKubun.FROM_1401_TO_1600),
+    (1800, ChakudosuKyoriKubun.FROM_1601_TO_1800),
+    (2000, ChakudosuKyoriKubun.FROM_1801_TO_2000),
+    (2200, ChakudosuKyoriKubun.FROM_2001_TO_2200),
+    (2400, ChakudosuKyoriKubun.FROM_2201_TO_2400),
+    (2800, ChakudosuKyoriKubun.FROM_2401_TO_2800),
+]
+
+
 def judge_distance_class(distance: int) -> DistanceClass:
     """距離から学習用の距離区分を判定する.
 
@@ -70,19 +83,6 @@ def judge_distance_class(distance: int) -> DistanceClass:
     if distance <= 2600:
         return DistanceClass.LONG_MIDDLE
     return DistanceClass.LONG
-
-
-# 距離の昇順に並んだ (上限距離, 区分) のペア。すべての上限を超えた場合はOVER_2801とする
-_KYORI_KUBUN_BOUNDARIES: list[tuple[int, ChakudosuKyoriKubun]] = [
-    (1200, ChakudosuKyoriKubun.UNDER_1200),
-    (1400, ChakudosuKyoriKubun.FROM_1201_TO_1400),
-    (1600, ChakudosuKyoriKubun.FROM_1401_TO_1600),
-    (1800, ChakudosuKyoriKubun.FROM_1601_TO_1800),
-    (2000, ChakudosuKyoriKubun.FROM_1801_TO_2000),
-    (2200, ChakudosuKyoriKubun.FROM_2001_TO_2200),
-    (2400, ChakudosuKyoriKubun.FROM_2201_TO_2400),
-    (2800, ChakudosuKyoriKubun.FROM_2401_TO_2800),
-]
 
 
 def judge_chakudosu_kyori_kubun(distance: int) -> ChakudosuKyoriKubun:
