@@ -206,3 +206,7 @@ assert track_size == TrackSize.BIG
 |---|---|
 | `KeibaDomainError` | 基底例外クラス |
 
+
+## ドキュメント
+
+各モジュールのAPI仕様は [doc/](doc/README.md) を参照してください。
