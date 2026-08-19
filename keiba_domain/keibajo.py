@@ -99,6 +99,10 @@ def keibajo_from_code(code: str) -> Keibajo:
 def is_central_keibajo(code: str) -> bool:
     """中央競馬場のコードかどうかを判定する.
 
+    地方競馬場のコードと未知のコードはいずれもFalseを返す。過去成績から中央のレースだけを
+    抽出する用途を想定しており、想定外のコードが1件混ざっただけで処理全体が止まらないよう
+    例外は送出しない。コードそのものの妥当性を検証したい場合は keibajo_from_code を使う。
+
     Args:
         code (str): 競馬場コード
 
