@@ -53,18 +53,8 @@ KEIBAJO_CODE_TO_NAME: dict[str, Keibajo] = {
 # 中央競馬場のコード
 CENTRAL_KEIBAJO_CODES: frozenset[str] = frozenset(KEIBAJO_CODE_TO_NAME.keys())
 
-# 地方・海外を含む競馬場コード→名称（中央10場も含む）
-KEIBAJO_CODE_TO_LOCAL_NAME: dict[str, str] = {
-    "01": "札幌",
-    "02": "函館",
-    "03": "福島",
-    "04": "新潟",
-    "05": "東京",
-    "06": "中山",
-    "07": "中京",
-    "08": "京都",
-    "09": "阪神",
-    "10": "小倉",
+# 中央以外の競馬場コード→名称
+_NON_CENTRAL_KEIBAJO_CODE_TO_NAME: dict[str, str] = {
     "30": "門別",
     "35": "盛岡",
     "36": "水沢",
@@ -80,6 +70,12 @@ KEIBAJO_CODE_TO_LOCAL_NAME: dict[str, str] = {
     "54": "高知",
     "55": "佐賀",
     "65": "帯広",
+}
+
+# 地方・海外を含む競馬場コード→名称（中央10場も含む）
+KEIBAJO_CODE_TO_LOCAL_NAME: dict[str, str] = {
+    **{code: keibajo.value for code, keibajo in KEIBAJO_CODE_TO_NAME.items()},
+    **_NON_CENTRAL_KEIBAJO_CODE_TO_NAME,
 }
 
 
