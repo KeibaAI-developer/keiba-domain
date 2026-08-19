@@ -3,6 +3,8 @@
 import pytest
 
 from keiba_domain import (
+    HIDARI_KEIBAJO,
+    MIGI_KEIBAJO,
     Direction,
     Inout,
     KeibaDomainError,
@@ -149,3 +151,9 @@ def test_build_course_key_raises_for_non_positive_distance(distance: int) -> Non
     """距離が0以下の場合はKeibaDomainErrorが発生する."""
     with pytest.raises(KeibaDomainError, match="距離が不正です"):
         build_course_key(Keibajo.TOKYO, TurfDirt.TURF, distance)
+
+
+def test_migi_and_hidari_keibajo_cover_all_keibajo() -> None:
+    """右回りと左回りの集合が中央10場を重複なく網羅している."""
+    assert MIGI_KEIBAJO | HIDARI_KEIBAJO == set(Keibajo)
+    assert MIGI_KEIBAJO & HIDARI_KEIBAJO == set()

@@ -6,6 +6,7 @@
 from enum import StrEnum
 
 from keiba_domain._validation import validate_distance
+from keiba_domain.exceptions import KeibaDomainError
 from keiba_domain.keibajo import Keibajo
 
 
@@ -261,14 +262,17 @@ def judge_direction(keibajo: Keibajo, turf_dirt: TurfDirt, distance: int) -> Dir
         Direction: 回り
 
     Raises:
-        KeibaDomainError: 距離が0以下の場合
+        KeibaDomainError: 距離が0以下の場合、または競馬場が右回り・左回りのいずれにも
+            分類されていない場合
     """
     validate_distance(distance)
     if keibajo == Keibajo.NIIGATA and turf_dirt == TurfDirt.TURF and distance == 1000:
         return Direction.STRAIGHT
     if keibajo in MIGI_KEIBAJO:
         return Direction.RIGHT
-    return Direction.LEFT
+    if keibajo in HIDARI_KEIBAJO:
+        return Direction.LEFT
+    raise KeibaDomainError(f"回りが分類されていない競馬場です: {keibajo}")
 
 
 def is_straight_course(keibajo: Keibajo, turf_dirt: TurfDirt, distance: int) -> bool:
