@@ -75,7 +75,8 @@ pip install -e /path/to/keiba-domain
 
 | 種別 | 名前 | 用途 |
 |---|---|---|
-| Enum | `TurfDirt` | 芝・ダート・障害の区別を表す |
+| Enum | `TurfDirt` | 芝・ダートの区別を表す |
+| Enum | `RaceShubetsu` | レース種別（平地/障害）を表す |
 | Enum | `Inout` | 内外（内/外/内-外/外-内）を表す |
 | Enum | `Direction` | コースの左右方向（左回り/右回り/直線）を表す |
 | Enum | `TrackSize` | コースの大小区分（大箱/小回り）を表す |
@@ -83,7 +84,7 @@ pip install -e /path/to/keiba-domain
 | 定数 | `HIDARI_KEIBAJO` | 左回りの競馬場集合 |
 | 定数 | `INOUT_REQUIRED_COURSES` | 内外の区別が必要なコース集合 |
 | 定数 | `COURSE_TRACK_SIZE` | コースキー→コースの大小（直線コースは未定義） |
-| 関数 | `parse_turf_dirt` | 文字列から芝ダを判定（"障"を最優先） |
+| 関数 | `parse_turf_dirt` | 文字列から芝ダを判定（平地障害は判定しない） |
 | 関数 | `parse_inout` | 文字列から内外を判定 |
 | 関数 | `judge_direction` | 競馬場・芝ダ・距離から回りを判定 |
 | 関数 | `is_straight_course` | 直線コースかどうかを判定 |

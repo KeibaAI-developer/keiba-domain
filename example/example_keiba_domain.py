@@ -14,6 +14,7 @@ from keiba_domain import (
     Inout,
     KeibaDomainError,
     Keibajo,
+    RaceShubetsu,
     TrackSize,
     TurfDirt,
     Waku,
@@ -118,8 +119,11 @@ def show_course() -> None:
     """
     _print_section("コース")
 
-    turf_dirt = parse_turf_dirt("障芝3000")
-    print(f"parse_turf_dirt('障芝3000') = {turf_dirt}（'障'が優先される）")
+    turf_dirt = parse_turf_dirt("芝2000m(左 A)")
+    print(f"parse_turf_dirt('芝2000m(左 A)') = {turf_dirt}")
+    no_turf_dirt = parse_turf_dirt("障2880m")
+    print(f"parse_turf_dirt('障2880m') = {no_turf_dirt}（芝ダの記載がない文字列はNone）")
+    print(f"RaceShubetsu.SHOGAI = {RaceShubetsu.SHOGAI}（平地か障害かは芝ダとは別概念）")
 
     inout = parse_inout("右 外 B")
     print(f"parse_inout('右 外 B') = {inout}")
