@@ -1,6 +1,6 @@
 """KeibaDomainErrorのテスト."""
 
-from keiba_domain.exceptions import KeibaDomainError
+from keiba_domain import KeibaDomainError
 
 
 # 正常系
