@@ -157,3 +157,24 @@ def test_migi_and_hidari_keibajo_cover_all_keibajo() -> None:
     """右回りと左回りの集合が中央10場を重複なく網羅している."""
     assert MIGI_KEIBAJO | HIDARI_KEIBAJO == set(Keibajo)
     assert MIGI_KEIBAJO & HIDARI_KEIBAJO == set()
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("右 内-外 A", Inout.UCHI_SOTO),
+        ("右 外-内 A", Inout.SOTO_UCHI),
+        ("右 外 内 A", Inout.SOTO_UCHI),
+    ],
+)
+def test_parse_inout_prefers_explicit_notation(text: str, expected: Inout) -> None:
+    """内外を併記した表記から内外を判定できる."""
+    assert parse_inout(text) == expected
+
+
+# 準正常系
+@pytest.mark.parametrize("distance", [0, -1, -2000])
+def test_is_straight_course_raises_for_non_positive_distance(distance: int) -> None:
+    """距離が0以下の場合はKeibaDomainErrorが発生する."""
+    with pytest.raises(KeibaDomainError, match="距離が不正です"):
+        is_straight_course(Keibajo.NIIGATA, TurfDirt.TURF, distance)

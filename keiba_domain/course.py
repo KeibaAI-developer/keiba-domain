@@ -229,7 +229,9 @@ def parse_turf_dirt(text: str) -> TurfDirt | None:
 def parse_inout(text: str) -> Inout | None:
     """内外を含む文字列から内外を判定する.
 
-    "内"と"外"の両方を含む場合は外-内と判定する（阪神芝3200mのみ外回りと内回りの両方を使用）。
+    "内-外" / "外-内" という明示的な表記を優先して判定する。
+    区切りのない状態で"内"と"外"の両方を含む場合は外-内と判定する
+    （阪神芝3200mのみ外回りと内回りの両方を使用する）。
 
     Args:
         text (str): 内外を含む文字列（例: "右 外 B"）
@@ -237,6 +239,10 @@ def parse_inout(text: str) -> Inout | None:
     Returns:
         Inout | None: 内外。判定できない場合はNone
     """
+    if Inout.UCHI_SOTO in text:
+        return Inout.UCHI_SOTO
+    if Inout.SOTO_UCHI in text:
+        return Inout.SOTO_UCHI
     has_uchi = "内" in text
     has_soto = "外" in text
     if has_uchi and has_soto:
