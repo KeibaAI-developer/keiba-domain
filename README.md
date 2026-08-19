@@ -48,7 +48,3 @@ except KeibaDomainError as e:
 |---|---|
 | `KeibaDomainError` | 基底例外クラス |
 
-
-## ドキュメント
-
-- （ドキュメントへのリンクを記述）
