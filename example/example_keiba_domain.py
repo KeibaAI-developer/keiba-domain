@@ -32,11 +32,6 @@ from keiba_domain import (
 )
 
 
-def _print_section(title: str) -> None:
-    """セクション見出しを表示する."""
-    print(f"\n【{title}】")
-
-
 def show_keibajo() -> None:
     """競馬場（keibajo）モジュールの使用例を表示する.
 
@@ -163,6 +158,15 @@ def main() -> None:
     show_distance()
     show_waku()
     show_course()
+
+
+def _print_section(title: str) -> None:
+    """セクション見出しを表示する.
+
+    Args:
+        title (str): セクション名
+    """
+    print(f"\n【{title}】")
 
 
 if __name__ == "__main__":
