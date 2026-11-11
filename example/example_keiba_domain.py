@@ -1,17 +1,22 @@
 """keiba-domain の主要な公開APIを一通り呼び出すサンプルスクリプト.
 
-競馬場・馬場状態・距離区分・枠・コース・レースコードのドメイン定義と判定関数を呼び出し、
+競馬場・馬場状態・距離区分・枠・コース・レースコード・トラックコード・異常区分・グレードの
+ドメイン定義と判定関数を呼び出し、
 結果と例外が送出されるケースを表示する。外部データ（DB・ネットワーク・ファイル）には依存しない。
 """
 
 from keiba_domain import (
     KEIBAJO_TO_CODE,
+    NOT_FINISHED_IJO_KUBUN_CODES,
+    NOT_STARTED_IJO_KUBUN_CODES,
     WAKU_NUM_TO_WAKU,
     WAKU_TO_WAKU_CLASS,
     Baba,
     ChakudosuKyoriKubun,
     Direction,
     DistanceClass,
+    Grade,
+    IjoKubun,
     Inout,
     KeibaDomainError,
     Keibajo,
@@ -23,7 +28,10 @@ from keiba_domain import (
     build_course_key,
     extract_race_code_parts,
     get_course_key_inout,
+    get_track_codes,
     get_track_size,
+    grade_from_code,
+    ijo_kubun_from_code,
     is_central_keibajo,
     is_straight_course,
     judge_chakudosu_kyori_kubun,
@@ -33,6 +41,8 @@ from keiba_domain import (
     keibajo_from_name,
     parse_inout,
     parse_turf_dirt,
+    race_shubetsu_from_track_code,
+    turf_dirt_from_track_code,
     validate_race_code,
 )
 
@@ -181,10 +191,72 @@ def show_race_code() -> None:
         print(f"validate_race_code('20261115') は例外を送出: {e}")
 
 
+def show_track_code() -> None:
+    """トラックコード（track_code）モジュールの使用例を表示する.
+
+    コード"00"（未設定）は None を返し、定義に無いコードでは KeibaDomainError を送出することを示す。
+    """
+    _print_section("トラックコード")
+
+    print(f"turf_dirt_from_track_code('24') = {turf_dirt_from_track_code('24')}")
+    print(f"race_shubetsu_from_track_code('52') = {race_shubetsu_from_track_code('52')}")
+    print(f"turf_dirt_from_track_code('00') = {turf_dirt_from_track_code('00')}（未設定はNone）")
+
+    try:
+        turf_dirt_from_track_code("99")
+    except KeibaDomainError as e:
+        print(f"turf_dirt_from_track_code('99') は例外を送出: {e}")
+
+    heichi_turf = get_track_codes(TurfDirt.TURF, RaceShubetsu.HEICHI)
+    print(f"get_track_codes(TurfDirt.TURF, RaceShubetsu.HEICHI) = {heichi_turf}")
+    print(f"get_track_codes(TurfDirt.DIRT) = {get_track_codes(TurfDirt.DIRT)}")
+
+
+def show_ijo_kubun() -> None:
+    """異常区分（ijo_kubun）モジュールの使用例を表示する.
+
+    コード"0"（異常なし）は None を返し、範囲外のコードでは KeibaDomainError を送出することを示す。
+    """
+    _print_section("異常区分")
+
+    print(f"ijo_kubun_from_code('4') = {ijo_kubun_from_code('4')}")
+    print(f"ijo_kubun_from_code('0') = {ijo_kubun_from_code('0')}（異常なしはNone）")
+
+    try:
+        ijo_kubun_from_code("9")
+    except KeibaDomainError as e:
+        print(f"ijo_kubun_from_code('9') は例外を送出: {e}")
+
+    print(f"NOT_STARTED_IJO_KUBUN_CODES = {sorted(NOT_STARTED_IJO_KUBUN_CODES)}")
+    print(f"NOT_FINISHED_IJO_KUBUN_CODES = {sorted(NOT_FINISHED_IJO_KUBUN_CODES)}")
+    print(f"IjoKubun一覧: {[member.value for member in IjoKubun]}")
+
+
+def show_grade() -> None:
+    """グレード（grade）モジュールの使用例を表示する.
+
+    空白と"_"のコード（一般競走）は None を返し、定義に無いコードでは KeibaDomainError を
+    送出することを示す。
+    """
+    _print_section("グレード")
+
+    print(f"grade_from_code('A') = {grade_from_code('A')}")
+    print(f"grade_from_code(' ') = {grade_from_code(' ')}（一般競走はNone）")
+    print(f"grade_from_code('_') = {grade_from_code('_')}（統一スキーマの一般競走もNone）")
+
+    try:
+        grade_from_code("Z")
+    except KeibaDomainError as e:
+        print(f"grade_from_code('Z') は例外を送出: {e}")
+
+    print(f"Grade一覧: {[member.value for member in Grade]}")
+
+
 def main() -> None:
     """メイン処理.
 
-    競馬場・馬場状態・距離区分・枠・コース・レースコードの各モジュールの使用例を順に表示する。
+    競馬場・馬場状態・距離区分・枠・コース・レースコード・トラックコード・異常区分・グレードの
+    各モジュールの使用例を順に表示する。
     """
     show_keibajo()
     show_baba()
@@ -192,6 +264,9 @@ def main() -> None:
     show_waku()
     show_course()
     show_race_code()
+    show_track_code()
+    show_ijo_kubun()
+    show_grade()
 
 
 def _print_section(title: str) -> None:
