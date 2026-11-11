@@ -102,10 +102,38 @@ pip install -e /path/to/keiba-domain
 | 関数 | `validate_race_code` | レースコードが半角数字16桁であることを検証（不正な形式は例外） |
 | 関数 | `extract_race_code_parts` | レースコードを年・月日・競馬場コード・回・日目・Rに分解 |
 
+### `track_code`（トラックコード）
+
+| 種別 | 名前 | 用途 |
+|---|---|---|
+| 定数 | `TRACK_CODE_TO_TURF_DIRT` | トラックコード→`TurfDirt` |
+| 定数 | `TRACK_CODE_TO_RACE_SHUBETSU` | トラックコード→`RaceShubetsu` |
+| 関数 | `turf_dirt_from_track_code` | トラックコードから`TurfDirt`を取得（"00"は`None`、定義外は例外） |
+| 関数 | `race_shubetsu_from_track_code` | トラックコードから`RaceShubetsu`を取得（"00"は`None`、定義外は例外） |
+| 関数 | `get_track_codes` | 芝ダとレース種別に該当するトラックコードを昇順で取得 |
+
+### `ijo_kubun`（異常区分）
+
+| 種別 | 名前 | 用途 |
+|---|---|---|
+| Enum | `IjoKubun` | 異常区分（出走取消〜降着）を表す |
+| 定数 | `IJO_KUBUN_CODE_TO_NAME` | 異常区分コード（"1"〜"7"）→`IjoKubun` |
+| 定数 | `NOT_STARTED_IJO_KUBUN_CODES` | 出走しなかった馬の異常区分コード集合 |
+| 定数 | `NOT_FINISHED_IJO_KUBUN_CODES` | 完走しなかった馬の異常区分コード集合 |
+| 関数 | `ijo_kubun_from_code` | 異常区分コードから`IjoKubun`を取得（"0"は`None`、範囲外は例外） |
+
+### `grade`（グレード）
+
+| 種別 | 名前 | 用途 |
+|---|---|---|
+| Enum | `Grade` | グレード（G1〜リステッド）を表す |
+| 定数 | `GRADE_CODE_TO_NAME` | グレードコード→`Grade` |
+| 関数 | `grade_from_code` | グレードコードから`Grade`を取得（空白は`None`、定義外は例外） |
+
 
 ## 使い方
 
-基底例外クラス `KeibaDomainError`、競馬場・馬場状態・距離区分・枠・コース・レースコードのドメイン定義と判定関数を提供しています。
+基底例外クラス `KeibaDomainError`、競馬場・馬場状態・距離区分・枠・コース・レースコード・トラックコード・異常区分・グレードのドメイン定義と判定関数を提供しています。
 
 ```python
 from keiba_domain import KeibaDomainError
@@ -231,6 +259,38 @@ try:
     validate_race_code("20261115")
 except KeibaDomainError as e:
     print(f"レースコードが不正です: {e}")
+```
+
+```python
+from keiba_domain import (
+    NOT_STARTED_IJO_KUBUN_CODES,
+    Grade,
+    IjoKubun,
+    RaceShubetsu,
+    TurfDirt,
+    get_track_codes,
+    grade_from_code,
+    ijo_kubun_from_code,
+    race_shubetsu_from_track_code,
+    turf_dirt_from_track_code,
+)
+
+# トラックコードから芝ダとレース種別を取得（"00"は未設定を意味しNoneを返す。定義外のコードは例外）
+assert turf_dirt_from_track_code("24") == TurfDirt.DIRT
+assert race_shubetsu_from_track_code("52") == RaceShubetsu.SHOGAI
+assert turf_dirt_from_track_code("00") is None
+
+# 芝ダとレース種別に該当するトラックコードの取得（絞り込みの条件を組み立てる用途）
+assert get_track_codes(TurfDirt.DIRT) == ("23", "24", "25", "26", "27", "28", "29")
+
+# 異常区分コードから異常区分を取得（"0"は異常なしを意味しNoneを返す）
+assert ijo_kubun_from_code("4") == IjoKubun.KYOSO_CHUSHI
+assert ijo_kubun_from_code("0") is None
+assert "1" in NOT_STARTED_IJO_KUBUN_CODES  # 出走取消は出走していない
+
+# グレードコードからグレードを取得（空白は一般競走を意味しNoneを返す）
+assert grade_from_code("A") == Grade.G1
+assert grade_from_code(" ") is None
 ```
 
 
