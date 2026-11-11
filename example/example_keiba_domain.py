@@ -1,10 +1,11 @@
 """keiba-domain の主要な公開APIを一通り呼び出すサンプルスクリプト.
 
-競馬場・馬場状態・距離区分・枠・コースのドメイン定義と判定関数を呼び出し、
+競馬場・馬場状態・距離区分・枠・コース・レースコードのドメイン定義と判定関数を呼び出し、
 結果と例外が送出されるケースを表示する。外部データ（DB・ネットワーク・ファイル）には依存しない。
 """
 
 from keiba_domain import (
+    KEIBAJO_TO_CODE,
     WAKU_NUM_TO_WAKU,
     WAKU_TO_WAKU_CLASS,
     Baba,
@@ -20,6 +21,7 @@ from keiba_domain import (
     Waku,
     baba_from_code,
     build_course_key,
+    extract_race_code_parts,
     get_course_key_inout,
     get_track_size,
     is_central_keibajo,
@@ -28,8 +30,10 @@ from keiba_domain import (
     judge_direction,
     judge_distance_class,
     keibajo_from_code,
+    keibajo_from_name,
     parse_inout,
     parse_turf_dirt,
+    validate_race_code,
 )
 
 
@@ -52,6 +56,14 @@ def show_keibajo() -> None:
     print(f"is_central_keibajo('05') = {is_central_keibajo('05')}")
     print(f"is_central_keibajo('42') = {is_central_keibajo('42')}（地方でも例外は送出しない）")
     print(f"is_central_keibajo('99') = {is_central_keibajo('99')}（未知のコードでも同様）")
+
+    kyoto = keibajo_from_name("京都")
+    print(f"keibajo_from_name('京都') = {kyoto}（コード: {KEIBAJO_TO_CODE[kyoto]}）")
+
+    try:
+        keibajo_from_name("大井")
+    except KeibaDomainError as e:
+        print(f"keibajo_from_name('大井') は例外を送出: {e}")
 
 
 def show_baba() -> None:
@@ -152,16 +164,34 @@ def show_course() -> None:
     print(f"TrackSize一覧: {[member.value for member in TrackSize]}")
 
 
+def show_race_code() -> None:
+    """レースコード（race_code）モジュールの使用例を表示する.
+
+    validate_race_code は半角数字16桁でないレースコードで KeibaDomainError を送出することを示す。
+    """
+    _print_section("レースコード")
+
+    race_code = "2026111508050411"
+    validate_race_code(race_code)
+    print(f"extract_race_code_parts('{race_code}') = {extract_race_code_parts(race_code)}")
+
+    try:
+        validate_race_code("20261115")
+    except KeibaDomainError as e:
+        print(f"validate_race_code('20261115') は例外を送出: {e}")
+
+
 def main() -> None:
     """メイン処理.
 
-    競馬場・馬場状態・距離区分・枠・コースの各モジュールの使用例を順に表示する。
+    競馬場・馬場状態・距離区分・枠・コース・レースコードの各モジュールの使用例を順に表示する。
     """
     show_keibajo()
     show_baba()
     show_distance()
     show_waku()
     show_course()
+    show_race_code()
 
 
 def _print_section(title: str) -> None:

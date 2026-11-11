@@ -1,6 +1,6 @@
 """keiba-domain: 競馬ドメインのマスタ定義と判定処理を集約する最下層ライブラリ.
 
-競馬場・馬場状態・芝ダ・内外・回り・距離区分・コースの大小・枠の定義と判定処理を提供する。
+競馬場・馬場状態・芝ダ・内外・回り・距離区分・コースの大小・枠・レースコードの定義と判定処理を提供する。
 """
 
 try:
@@ -40,9 +40,16 @@ from keiba_domain.keibajo import (
     CENTRAL_KEIBAJO_CODES,
     KEIBAJO_CODE_TO_LOCAL_NAME,
     KEIBAJO_CODE_TO_NAME,
+    KEIBAJO_TO_CODE,
     Keibajo,
     is_central_keibajo,
     keibajo_from_code,
+    keibajo_from_name,
+)
+from keiba_domain.race_code import (
+    RACE_CODE_LENGTH,
+    extract_race_code_parts,
+    validate_race_code,
 )
 from keiba_domain.waku import (
     WAKU_NUM_TO_WAKU,
@@ -59,7 +66,9 @@ __all__ = [
     "INOUT_REQUIRED_COURSES",
     "KEIBAJO_CODE_TO_LOCAL_NAME",
     "KEIBAJO_CODE_TO_NAME",
+    "KEIBAJO_TO_CODE",
     "MIGI_KEIBAJO",
+    "RACE_CODE_LENGTH",
     "WAKU_NUM_TO_WAKU",
     "WAKU_TO_WAKU_CLASS",
     "Baba",
@@ -76,6 +85,7 @@ __all__ = [
     "WakuClass",
     "baba_from_code",
     "build_course_key",
+    "extract_race_code_parts",
     "get_course_key_inout",
     "get_track_size",
     "is_central_keibajo",
@@ -84,6 +94,8 @@ __all__ = [
     "judge_direction",
     "judge_distance_class",
     "keibajo_from_code",
+    "keibajo_from_name",
     "parse_inout",
     "parse_turf_dirt",
+    "validate_race_code",
 ]
