@@ -34,6 +34,9 @@ class Grade(StrEnum):
     LISTED = "L"
 
 
+# 一般競走を表すグレードコード。統一スキーマ（keiba-data-interface）は半角空白をこの値に置き換える
+_GENERAL_RACE_CODE = "_"
+
 # グレードコード→グレード
 GRADE_CODE_TO_NAME: dict[str, Grade] = {
     "A": Grade.G1,
@@ -51,19 +54,20 @@ GRADE_CODE_TO_NAME: dict[str, Grade] = {
 def grade_from_code(code: str) -> Grade | None:
     """グレードコードからグレードを取得する.
 
-    一般競走のグレードコードは半角空白で表されるため、前後の空白を除いてから判定する。
+    一般競走のグレードコードは、JRA-VANでは半角空白、統一スキーマでは"_"で表される。
+    前後の空白を除いたcodeが空または"_"の場合を一般競走として扱う。
 
     Args:
         code (str): グレードコード（例: "A"）
 
     Returns:
-        Grade | None: グレード。前後の空白を除いたcodeが空（一般競走）の場合はNone
+        Grade | None: グレード。一般競走の場合はNone
 
     Raises:
-        KeibaDomainError: codeが空でも定義済みのグレードコードでもない場合
+        KeibaDomainError: codeが一般競走でも定義済みのグレードコードでもない場合
     """
     stripped = code.strip()
-    if not stripped:
+    if not stripped or stripped == _GENERAL_RACE_CODE:
         return None
     if stripped not in GRADE_CODE_TO_NAME:
         raise KeibaDomainError(f"グレードコードが不正です: {code}")

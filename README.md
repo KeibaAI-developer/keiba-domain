@@ -128,7 +128,7 @@ pip install -e /path/to/keiba-domain
 |---|---|---|
 | Enum | `Grade` | グレード（G1〜リステッド）を表す |
 | 定数 | `GRADE_CODE_TO_NAME` | グレードコード→`Grade` |
-| 関数 | `grade_from_code` | グレードコードから`Grade`を取得（空白は`None`、定義外は例外） |
+| 関数 | `grade_from_code` | グレードコードから`Grade`を取得（空白と"_"は`None`、定義外は例外） |
 
 
 ## 使い方
@@ -288,9 +288,10 @@ assert ijo_kubun_from_code("4") == IjoKubun.KYOSO_CHUSHI
 assert ijo_kubun_from_code("0") is None
 assert "1" in NOT_STARTED_IJO_KUBUN_CODES  # 出走取消は出走していない
 
-# グレードコードからグレードを取得（空白は一般競走を意味しNoneを返す）
+# グレードコードからグレードを取得（空白と"_"は一般競走を意味しNoneを返す）
 assert grade_from_code("A") == Grade.G1
 assert grade_from_code(" ") is None
+assert grade_from_code("_") is None
 ```
 
 

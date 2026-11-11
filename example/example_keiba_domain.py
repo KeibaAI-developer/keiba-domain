@@ -235,13 +235,14 @@ def show_ijo_kubun() -> None:
 def show_grade() -> None:
     """グレード（grade）モジュールの使用例を表示する.
 
-    空白のコード（一般競走）は None を返し、定義に無いコードでは KeibaDomainError を
+    空白と"_"のコード（一般競走）は None を返し、定義に無いコードでは KeibaDomainError を
     送出することを示す。
     """
     _print_section("グレード")
 
     print(f"grade_from_code('A') = {grade_from_code('A')}")
     print(f"grade_from_code(' ') = {grade_from_code(' ')}（一般競走はNone）")
+    print(f"grade_from_code('_') = {grade_from_code('_')}（統一スキーマの一般競走もNone）")
 
     try:
         grade_from_code("Z")

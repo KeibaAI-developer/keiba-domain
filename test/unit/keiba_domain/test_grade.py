@@ -25,9 +25,9 @@ def test_grade_from_code_returns_grade(code: str, expected: Grade) -> None:
     assert grade_from_code(code) == expected
 
 
-@pytest.mark.parametrize("code", [" ", "", "  "])
-def test_grade_from_code_with_blank_code_returns_none(code: str) -> None:
-    """空白だけ、または空のコード（一般競走）の場合はNoneを返す."""
+@pytest.mark.parametrize("code", [" ", "", "  ", "_", " _ "])
+def test_grade_from_code_with_general_race_code_returns_none(code: str) -> None:
+    """空白だけ・空・"_"のコード（一般競走）の場合はNoneを返す."""
     assert grade_from_code(code) is None
 
 
@@ -37,7 +37,7 @@ def test_grade_from_code_ignores_surrounding_whitespace() -> None:
 
 
 # 準正常系
-@pytest.mark.parametrize("code", ["I", "K", "M", "a", "1", "G1", "_"])
+@pytest.mark.parametrize("code", ["I", "K", "M", "a", "1", "G1", "__", "-"])
 def test_grade_from_code_with_undefined_code_raises_error(code: str) -> None:
     """定義に無いグレードコードを渡すとKeibaDomainErrorが送出される."""
     with pytest.raises(KeibaDomainError):
