@@ -10,3 +10,4 @@ keiba-domainライブラリのAPIドキュメント。
 - [distance.md](API/distance.md) — 距離区分のEnumと判定関数
 - [waku.md](API/waku.md) — 枠のEnumと変換辞書
 - [course.md](API/course.md) — コース情報のEnumと判定関数
+- [race_code.md](API/race_code.md) — レースコードの検証と分解

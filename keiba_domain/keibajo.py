@@ -53,6 +53,11 @@ KEIBAJO_CODE_TO_NAME: dict[str, Keibajo] = {
 # 中央競馬場のコード
 CENTRAL_KEIBAJO_CODES: frozenset[str] = frozenset(KEIBAJO_CODE_TO_NAME.keys())
 
+# 競馬場→競馬場コード（中央10場）
+KEIBAJO_TO_CODE: dict[Keibajo, str] = {
+    keibajo: code for code, keibajo in KEIBAJO_CODE_TO_NAME.items()
+}
+
 # 中央以外の競馬場コード→名称
 _NON_CENTRAL_KEIBAJO_CODE_TO_NAME: dict[str, str] = {
     "30": "門別",
@@ -94,6 +99,23 @@ def keibajo_from_code(code: str) -> Keibajo:
     if code not in KEIBAJO_CODE_TO_NAME:
         raise KeibaDomainError(f"競馬場コードが不正です: {code}")
     return KEIBAJO_CODE_TO_NAME[code]
+
+
+def keibajo_from_name(name: str) -> Keibajo:
+    """競馬場名から中央競馬場を取得する.
+
+    Args:
+        name (str): 競馬場名（例: "東京"）
+
+    Returns:
+        Keibajo: 中央競馬場
+
+    Raises:
+        KeibaDomainError: nameが中央10場の名称でない場合
+    """
+    if name not in KEIBAJO_TO_CODE:
+        raise KeibaDomainError(f"競馬場名が不正です: {name}")
+    return Keibajo(name)
 
 
 def is_central_keibajo(code: str) -> bool:

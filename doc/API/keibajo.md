@@ -104,6 +104,55 @@
 
 ---
 
+## `KEIBAJO_TO_CODE`
+
+中央競馬場→競馬場コード（2桁）のマッピング。`KEIBAJO_CODE_TO_NAME` の逆引きにあたる。
+
+| キーの型 | キー | 値の型 | 値 | 説明 |
+|---|---|---|---|---|
+| `Keibajo` | `Keibajo.SAPPORO` | `str` | `"01"` | 札幌 |
+| `Keibajo` | `Keibajo.HAKODATE` | `str` | `"02"` | 函館 |
+| `Keibajo` | `Keibajo.FUKUSHIMA` | `str` | `"03"` | 福島 |
+| `Keibajo` | `Keibajo.NIIGATA` | `str` | `"04"` | 新潟 |
+| `Keibajo` | `Keibajo.TOKYO` | `str` | `"05"` | 東京 |
+| `Keibajo` | `Keibajo.NAKAYAMA` | `str` | `"06"` | 中山 |
+| `Keibajo` | `Keibajo.CHUKYO` | `str` | `"07"` | 中京 |
+| `Keibajo` | `Keibajo.KYOTO` | `str` | `"08"` | 京都 |
+| `Keibajo` | `Keibajo.HANSHIN` | `str` | `"09"` | 阪神 |
+| `Keibajo` | `Keibajo.KOKURA` | `str` | `"10"` | 小倉 |
+
+---
+
+## `keibajo_from_name()`
+
+### 概要
+
+競馬場名から中央競馬場（`Keibajo`）を取得する。
+
+### 引数
+
+| 引数 | 型 | デフォルト値 | 説明 |
+|---|---|---|---|
+| `name` | `str` | - | 競馬場名（例: `"東京"`） |
+
+### 返り値
+
+| 型 | 説明 |
+|---|---|
+| `Keibajo` | 中央競馬場 |
+
+### 補足
+
+競馬場名から競馬場コードを得るには、`KEIBAJO_TO_CODE[keibajo_from_name(name)]` とする。
+
+### 例外
+
+| 例外 | 条件 |
+|---|---|
+| `KeibaDomainError` | `name` が中央10場の名称でない場合 |
+
+---
+
 ## `is_central_keibajo()`
 
 ### 概要

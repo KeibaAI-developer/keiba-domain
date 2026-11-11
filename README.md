@@ -42,7 +42,9 @@ pip install -e /path/to/keiba-domain
 | 定数 | `KEIBAJO_CODE_TO_NAME` | 競馬場コード→`Keibajo`（中央10場のみ） |
 | 定数 | `CENTRAL_KEIBAJO_CODES` | 中央競馬場のコード集合 |
 | 定数 | `KEIBAJO_CODE_TO_LOCAL_NAME` | 競馬場コード→名称（地方・中央すべて） |
+| 定数 | `KEIBAJO_TO_CODE` | `Keibajo`→競馬場コード |
 | 関数 | `keibajo_from_code` | 競馬場コードから`Keibajo`を取得（中央10場以外は例外） |
+| 関数 | `keibajo_from_name` | 競馬場名から`Keibajo`を取得（中央10場以外は例外） |
 | 関数 | `is_central_keibajo` | 中央競馬場のコードかどうかを判定（例外を送出しない） |
 
 ### `baba`（馬場状態）
@@ -92,10 +94,18 @@ pip install -e /path/to/keiba-domain
 | 関数 | `build_course_key` | コースキーを構築（例: "東京芝2000", "京都芝1600外"） |
 | 関数 | `get_track_size` | コースキーからコースの大小を取得 |
 
+### `race_code`（レースコード）
+
+| 種別 | 名前 | 用途 |
+|---|---|---|
+| 定数 | `RACE_CODE_LENGTH` | レースコードの桁数（16） |
+| 関数 | `validate_race_code` | レースコードが半角数字16桁であることを検証（不正な形式は例外） |
+| 関数 | `extract_race_code_parts` | レースコードを年・月日・競馬場コード・回・日目・Rに分解 |
+
 
 ## 使い方
 
-基底例外クラス `KeibaDomainError`、競馬場・馬場状態・距離区分・枠・コースのドメイン定義と判定関数を提供しています。
+基底例外クラス `KeibaDomainError`、競馬場・馬場状態・距離区分・枠・コース・レースコードのドメイン定義と判定関数を提供しています。
 
 ```python
 from keiba_domain import KeibaDomainError
@@ -195,6 +205,32 @@ assert course_key == "京都芝1600外"
 # コースの大小の取得（直線・未定義コースはNone）
 track_size = get_track_size("東京芝2000")
 assert track_size == TrackSize.BIG
+```
+
+```python
+from keiba_domain import (
+    KEIBAJO_TO_CODE,
+    KeibaDomainError,
+    Keibajo,
+    extract_race_code_parts,
+    keibajo_from_name,
+    validate_race_code,
+)
+
+# 競馬場名から中央競馬場と競馬場コードを取得（中央10場以外は例外）
+keibajo = keibajo_from_name("京都")
+assert keibajo == Keibajo.KYOTO
+assert KEIBAJO_TO_CODE[keibajo] == "08"
+
+# レースコードの検証（半角数字16桁でなければ例外）と分解
+validate_race_code("2026111508050411")
+parts = extract_race_code_parts("2026111508050411")
+assert parts["年"] == "2026"
+assert parts["競馬場コード"] == "08"
+try:
+    validate_race_code("20261115")
+except KeibaDomainError as e:
+    print(f"レースコードが不正です: {e}")
 ```
 
 
